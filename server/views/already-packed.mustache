@@ -6,28 +6,28 @@
     <title>Ultimate Packing List</title>
 </head>
 <body>
-    <a href='/master-list'>Master List</a><br/>
     <a href='/add-item'>Add Item To Master List</a><br/>
     <a href='/already-packed'>Already Packed</a><br/>
+    <a href='/'>Home/My List</a><br/><br/>
 
-    <h1>To Be Packed (My List)</h1>
-    <h2 style="font-size: 0.75 rem;"><em>(To add items to your list, go to <a href='/master-list'>Master List</a>)</em></h2>
+    <h1>Already Packed</h1>
     {{#items}}
     <ul style="list-style:none">
         <li>{{name}} <em>({{subcategory}})</em> Qty: {{quantity}}
         <div id=buttons style="display: flex">
-        <form method='POST' action='/pack-item'>
+        <form method='POST' action='/unpack'>
             <input type='hidden' value='{{item_id}}' name='item_id'>
-            <button>Pack Item</button>
+            <button>Unpack (Return to My List)</button>
         </form>
         <form method='POST' action='/de-list'>
             <input type='hidden' value='{{item_id}}' name='item_id'>
-            <button>Return Item to Master List</button>
+            <button>Return Item To Master List</button>
         </form>
         </div>
         </li>
     </ul>
     {{/items}}
 
-    </body>
+    
+</body>
 </html>
