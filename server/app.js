@@ -1,9 +1,11 @@
 const express = require('express')
 const app = express()
 const pgp = require('pg-promise')()
-const connectionString = 'postgres://localhost:5432/overpackersdb'
-const db = pgp(connectionString)
+// const connectionString = 'postgres://localhost:5432/overpackersdb'
 const mustacheExpress = require('mustache-express')
+require('dotenv').config()
+const connectionString = process.env.CONNECTION_STRING
+const db = pgp(connectionString)
 
 app.engine('mustache', mustacheExpress())
 app.set('views', './views')
@@ -11,11 +13,11 @@ app.set('view engine', 'mustache')
 app.use(express.urlencoded())
 
 app.post('/add-item', (req, res) => {
-    const { name, subcategory } = req.body
+    const { name, category } = req.body
     const quantity = parseInt(req.body.quantity)
-    db.none('INSERT INTO items(name, subcategory, quantity) VALUES($1, $2, $3)', [name, subcategory, quantity])
+    db.none('INSERT INTO items(name, category) VALUES($1, $2)', [name, category])
     .then(() => {
-        res.redirect('/')
+        res.redirect('/master-list')
     })
 })
 
@@ -79,21 +81,21 @@ app.post('/delete-item', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-    db.any('SELECT item_id, name, subcategory, is_on_list, is_packed, quantity FROM items WHERE is_on_list = true AND is_packed = false')
+    db.any('SELECT item_id, name, category, is_on_list, is_packed, quantity FROM items WHERE is_on_list = true AND is_packed = false')
     .then((items) => {
         res.render('index', { items: items })
     })
 })
 
 app.get('/master-list', (req, res) => {
-    db.any('SELECT item_id, name, subcategory, is_on_list, quantity FROM items where is_on_list = false')
+    db.any('SELECT item_id, name, category, is_on_list, quantity FROM items where is_on_list = false')
     .then((items) => {
         res.render('master-list', { items: items })
     })
 })
 
 app.get('/already-packed', (req, res) => {
-    db.any('SELECT item_id, name, subcategory, is_on_list, quantity FROM items where is_packed = true')
+    db.any('SELECT item_id, name, category, is_on_list, quantity FROM items where is_packed = true')
     .then((items) => {
         res.render('already-packed', { items: items })
     })

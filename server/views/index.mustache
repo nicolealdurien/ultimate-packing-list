@@ -11,10 +11,10 @@
     <a href='/already-packed'>Already Packed</a><br/>
 
     <h1>To Be Packed (My List)</h1>
-    <h2 style="font-size: 0.75 rem;"><em>(To add items to your list, go to <a href='/master-list'>Master List</a>)</em></h2>
+    <p style="font-size: 20px;"><em>(To add items to your list, go to <a href='/master-list'>Master List</a>)</em></p>
     {{#items}}
     <ul style="list-style:none">
-        <li>{{name}} <em>({{subcategory}})</em> Qty: {{quantity}}
+        <li>{{name}} <em>({{category}})</em> Qty: {{quantity}}
         <div id=buttons style="display: flex">
         <form method='POST' action='/pack-item'>
             <input type='hidden' value='{{item_id}}' name='item_id'>

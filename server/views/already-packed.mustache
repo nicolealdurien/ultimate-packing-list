@@ -13,7 +13,7 @@
     <h1>Already Packed</h1>
     {{#items}}
     <ul style="list-style:none">
-        <li>{{name}} <em>({{subcategory}})</em> Qty: {{quantity}}
+        <li>{{name}} <em>({{category}})</em> Qty: {{quantity}}
         <div id=buttons style="display: flex">
         <form method='POST' action='/unpack'>
             <input type='hidden' value='{{item_id}}' name='item_id'>
