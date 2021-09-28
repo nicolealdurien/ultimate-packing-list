@@ -31,6 +31,14 @@ app.post('/update-item', (req,res) => {
     })
 })
 
+app.post('/all-to-my-list', (req, res) => {
+    let isOnList = true;
+    db.none('UPDATE items SET is_on_list = $1', [isOnList])
+    .then(() => {
+        res.redirect('/')
+    })
+})
+
 app.post('/pack-item', (req,res) => {
     let itemId = parseInt(req.body.item_id)
     let isPacked = true
@@ -61,7 +69,7 @@ app.post('/unpack', (req,res) => {
     })
 })
 
-app.post('/de-list', (req,res) => {
+app.post('/de-list-from-packed', (req,res) => {
     let itemId = parseInt(req.body.item_id)
     let isOnList = false
     let isPacked = false
@@ -69,6 +77,17 @@ app.post('/de-list', (req,res) => {
     db.none('UPDATE items SET is_on_list = $1, is_packed = $2 WHERE item_id = $3', [isOnList, isPacked, itemId])
     .then(() => {
         res.redirect('/already-packed')
+    })
+})
+
+app.post('/de-list-from-my-list', (req,res) => {
+    let itemId = parseInt(req.body.item_id)
+    let isOnList = false
+    let isPacked = false
+    
+    db.none('UPDATE items SET is_on_list = $1, is_packed = $2 WHERE item_id = $3', [isOnList, isPacked, itemId])
+    .then(() => {
+        res.redirect('/')
     })
 })
 
@@ -88,14 +107,14 @@ app.get('/', (req, res) => {
 })
 
 app.get('/master-list', (req, res) => {
-    db.any('SELECT item_id, name, category, is_on_list, quantity FROM items where is_on_list = false')
+    db.any('SELECT item_id, name, category, is_on_list, quantity FROM items')
     .then((items) => {
         res.render('master-list', { items: items })
     })
 })
 
 app.get('/already-packed', (req, res) => {
-    db.any('SELECT item_id, name, category, is_on_list, quantity FROM items where is_packed = true')
+    db.any('SELECT item_id, name, category, is_on_list, quantity FROM items WHERE is_packed = true')
     .then((items) => {
         res.render('already-packed', { items: items })
     })

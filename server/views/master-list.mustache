@@ -11,6 +11,9 @@
     <a href='/'>Home/My List</a><br/><br/>
 
     <h1>Master List</h1>
+    <form method='POST' action='/all-to-my-list'>
+    <button>Copy ALL Items To My List</button>
+    </form>
     {{#items}}
     <ul style="list-style:none">
         <li>{{name}} <em>({{category}})</em> Qty: {{quantity}}
