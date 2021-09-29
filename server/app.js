@@ -12,6 +12,7 @@ app.set('views', './views')
 app.set('view engine', 'mustache')
 app.use(express.urlencoded())
 
+// add item to Master List
 app.post('/add-item', (req, res) => {
     const { name, category } = req.body
     const quantity = parseInt(req.body.quantity)
@@ -21,19 +22,30 @@ app.post('/add-item', (req, res) => {
     })
 })
 
-app.post('/update-item', (req,res) => {
-    let itemId = parseInt(req.body.item_id)
-    let isPacked = req.body.isPacked == "on" ? true : false
+// DON'T THINK THIS IS ACTUALLY STILL IN USE
+// app.post('/update-item', (req,res) => {
+//     let itemId = parseInt(req.body.item_id)
+//     let isPacked = req.body.isPacked == "on" ? true : false
     
-    db.none('UPDATE items SET is_packed = $1 WHERE item_id = $2', [isPacked, itemId])
+//     db.none('UPDATE items SET is_packed = $1 WHERE item_id = $2', [isPacked, itemId])
+//     .then(() => {
+//         res.redirect('/')
+//     })
+// })
+
+app.post('/all-to-my-list', (req, res) => {
+    let isOnList = true;
+    db.none('UPDATE items SET is_on_list = $1', [isOnList])
     .then(() => {
         res.redirect('/')
     })
 })
 
-app.post('/all-to-my-list', (req, res) => {
-    let isOnList = true;
-    db.none('UPDATE items SET is_on_list = $1', [isOnList])
+app.post('/all-to-master-list', (req, res) => {
+    let isPacked = false;
+    let isOnList = false;
+    let isCurrentlyPacked = true;
+    db.none('UPDATE items SET is_packed = $1, is_on_list =$2 WHERE is_packed = $3', [isPacked, isOnList, isCurrentlyPacked])
     .then(() => {
         res.redirect('/')
     })

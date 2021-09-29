@@ -12,6 +12,9 @@
 
     <h1>Already Packed</h1>
     {{#items}}
+    <form method='POST' action='/all-to-master-list'>
+    <button>Return ALL Items To Master List</button>
+    </form>
     <ul style="list-style:none">
         <li>{{name}} <em>({{category}})</em> Qty: {{quantity}}
         <div id=buttons style="display: flex">
