@@ -22,6 +22,7 @@ app.post('/add-item', (req, res) => {
     })
 })
 
+
 // DON'T THINK THIS IS ACTUALLY STILL IN USE
 // app.post('/update-item', (req,res) => {
 //     let itemId = parseInt(req.body.item_id)
@@ -33,6 +34,8 @@ app.post('/add-item', (req, res) => {
 //     })
 // })
 
+
+// Copy all items from Master List to individual list for a particular trip
 app.post('/all-to-my-list', (req, res) => {
     let isOnList = true;
     db.none('UPDATE items SET is_on_list = $1', [isOnList])
@@ -41,6 +44,7 @@ app.post('/all-to-my-list', (req, res) => {
     })
 })
 
+// Move all items on 'Already Packed' list back to Master List
 app.post('/all-to-master-list', (req, res) => {
     let isPacked = false;
     let isOnList = false;
@@ -51,6 +55,8 @@ app.post('/all-to-master-list', (req, res) => {
     })
 })
 
+
+// Move individual item from current list to "Already Packed"
 app.post('/pack-item', (req,res) => {
     let itemId = parseInt(req.body.item_id)
     let isPacked = true
@@ -61,6 +67,7 @@ app.post('/pack-item', (req,res) => {
     })
 })
 
+// Move individual item from Master List to individual list for a particular trip
 app.post('/update-list', (req,res) => {
     let itemId = parseInt(req.body.item_id)
     let isOnList = true
@@ -71,6 +78,7 @@ app.post('/update-list', (req,res) => {
     })
 })
 
+// Move single item from "Already Packed" List back to individual list for a particular trip (the 'whoops, didn't mean to hit that button' button)
 app.post('/unpack', (req,res) => {
     let itemId = parseInt(req.body.item_id)
     let isPacked = false
@@ -81,6 +89,7 @@ app.post('/unpack', (req,res) => {
     })
 })
 
+// Move single item from "Already Packed" list back to Master List
 app.post('/de-list-from-packed', (req,res) => {
     let itemId = parseInt(req.body.item_id)
     let isOnList = false
@@ -92,6 +101,7 @@ app.post('/de-list-from-packed', (req,res) => {
     })
 })
 
+// Move single item from current-trip list back to Master List
 app.post('/de-list-from-my-list', (req,res) => {
     let itemId = parseInt(req.body.item_id)
     let isOnList = false
@@ -103,14 +113,16 @@ app.post('/de-list-from-my-list', (req,res) => {
     })
 })
 
-app.post('/delete-item', (req, res) => {
-    const { itemId } = req.body
-    db.none('DELETE FROM items WHERE item_id = $1;', [bookId])
-    .then(() => {
-        res.redirect('/')
-    })
-})
+// Not actually using this right now
+// app.post('/delete-item', (req, res) => {
+//     const { itemId } = req.body
+//     db.none('DELETE FROM items WHERE item_id = $1;', [bookId])
+//     .then(() => {
+//         res.redirect('/')
+//     })
+// })
 
+// Front page displays in-progress list for current trip
 app.get('/', (req, res) => {
     db.any('SELECT item_id, name, category, is_on_list, is_packed, quantity FROM items WHERE is_on_list = true AND is_packed = false')
     .then((items) => {
@@ -118,6 +130,8 @@ app.get('/', (req, res) => {
     })
 })
 
+
+// Display of every item in DB
 app.get('/master-list', (req, res) => {
     db.any('SELECT item_id, name, category, is_on_list, quantity FROM items')
     .then((items) => {
@@ -125,6 +139,8 @@ app.get('/master-list', (req, res) => {
     })
 })
 
+
+// Display of all items where is_packed = true
 app.get('/already-packed', (req, res) => {
     db.any('SELECT item_id, name, category, is_on_list, quantity FROM items WHERE is_packed = true')
     .then((items) => {
@@ -132,12 +148,14 @@ app.get('/already-packed', (req, res) => {
     })
 })
 
+
+// Add new item to DB/Master List
 app.get('/add-item', (req, res) => {
     res.render('add-item')
   })
 
 
-
+// Server Listener
 app.listen(3000,() => {
     console.log('Server is running...')
 })
