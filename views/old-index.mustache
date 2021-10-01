@@ -14,12 +14,14 @@
     <p style="font-size: 20px;"><em>(To add items to your list, go to <a href='/master-list'>Master List</a>)</em></p>
     {{#items}}
     <ul style="list-style:none">
-        <li>{{name}} <em>({{category}})</em> Qty: {{quantity}}
+        <li>Item: {{name}}<br/>
+            Category: <em>{{category}}</em><br/>
+            Qty: {{quantity}}<br/><br/>
         <div id=buttons style="display: flex">
         <form method='POST' action='/pack-item'>
             <input type='hidden' value='{{item_id}}' name='item_id'>
             <button>Pack Item</button>
-        </form>
+        </form><br/><br/>
         <form method='POST' action='/de-list-from-my-list'>
             <input type='hidden' value='{{item_id}}' name='item_id'>
             <button>Return Item to Master List</button>
@@ -28,6 +30,5 @@
         </li>
     </ul>
     {{/items}}
-
     </body>
 </html>

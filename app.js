@@ -40,7 +40,7 @@ app.post('/all-to-my-list', (req, res) => {
     let isOnList = true;
     db.none('UPDATE items SET is_on_list = $1', [isOnList])
     .then(() => {
-        res.redirect('/')
+        res.redirect('old-index')
     })
 })
 
@@ -51,7 +51,7 @@ app.post('/all-to-master-list', (req, res) => {
     let isCurrentlyPacked = true;
     db.none('UPDATE items SET is_packed = $1, is_on_list =$2 WHERE is_packed = $3', [isPacked, isOnList, isCurrentlyPacked])
     .then(() => {
-        res.redirect('/')
+        res.redirect('/old-index')
     })
 })
 
@@ -63,7 +63,7 @@ app.post('/pack-item', (req,res) => {
     
     db.none('UPDATE items SET is_packed = $1 WHERE item_id = $2', [isPacked, itemId])
     .then(() => {
-        res.redirect('/')
+        res.redirect('/old-index')
     })
 })
 
@@ -109,7 +109,7 @@ app.post('/de-list-from-my-list', (req,res) => {
     
     db.none('UPDATE items SET is_on_list = $1, is_packed = $2 WHERE item_id = $3', [isOnList, isPacked, itemId])
     .then(() => {
-        res.redirect('/')
+        res.redirect('/old-index')
     })
 })
 
@@ -123,13 +123,19 @@ app.post('/de-list-from-my-list', (req,res) => {
 // })
 
 // Front page displays in-progress list for current trip
+app.get('/old-index', (req, res) => {
+    db.any('SELECT item_id, name, category, is_on_list, is_packed, quantity FROM items WHERE is_on_list = true AND is_packed = false')
+    .then((items) => {
+        res.render('/old-index', { items: items })
+    })
+})
+
 app.get('/', (req, res) => {
     db.any('SELECT item_id, name, category, is_on_list, is_packed, quantity FROM items WHERE is_on_list = true AND is_packed = false')
     .then((items) => {
         res.render('index', { items: items })
     })
 })
-
 
 // Display of every item in DB
 app.get('/master-list', (req, res) => {
