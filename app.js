@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 const pgp = require('pg-promise')()
-// const connectionString = 'postgres://localhost:5432/overpackersdb'
 const mustacheExpress = require('mustache-express')
 require('dotenv').config()
 const connectionString = process.env.CONNECTION_STRING
@@ -40,7 +39,7 @@ app.post('/all-to-my-list', (req, res) => {
     let isOnList = true;
     db.none('UPDATE items SET is_on_list = $1', [isOnList])
     .then(() => {
-        res.redirect('old-index')
+        res.redirect('/')
     })
 })
 
@@ -51,7 +50,7 @@ app.post('/all-to-master-list', (req, res) => {
     let isCurrentlyPacked = true;
     db.none('UPDATE items SET is_packed = $1, is_on_list =$2 WHERE is_packed = $3', [isPacked, isOnList, isCurrentlyPacked])
     .then(() => {
-        res.redirect('/old-index')
+        res.redirect('/')
     })
 })
 
@@ -63,7 +62,7 @@ app.post('/pack-item', (req,res) => {
     
     db.none('UPDATE items SET is_packed = $1 WHERE item_id = $2', [isPacked, itemId])
     .then(() => {
-        res.redirect('/old-index')
+        res.redirect('/')
     })
 })
 
@@ -74,7 +73,7 @@ app.post('/update-list', (req,res) => {
     
     db.none('UPDATE items SET is_on_list = $1 WHERE item_id = $2', [isOnList, itemId])
     .then(() => {
-        res.redirect('/master-list')
+        res.redirect('master-list')
     })
 })
 
@@ -85,7 +84,7 @@ app.post('/unpack', (req,res) => {
     
     db.none('UPDATE items SET is_packed = $1 WHERE item_id = $2', [isPacked, itemId])
     .then(() => {
-        res.redirect('/already-packed')
+        res.redirect('already-packed')
     })
 })
 
@@ -97,7 +96,7 @@ app.post('/de-list-from-packed', (req,res) => {
     
     db.none('UPDATE items SET is_on_list = $1, is_packed = $2 WHERE item_id = $3', [isOnList, isPacked, itemId])
     .then(() => {
-        res.redirect('/already-packed')
+        res.redirect('already-packed')
     })
 })
 
@@ -109,7 +108,7 @@ app.post('/de-list-from-my-list', (req,res) => {
     
     db.none('UPDATE items SET is_on_list = $1, is_packed = $2 WHERE item_id = $3', [isOnList, isPacked, itemId])
     .then(() => {
-        res.redirect('/old-index')
+        res.redirect('/')
     })
 })
 
@@ -123,10 +122,10 @@ app.post('/de-list-from-my-list', (req,res) => {
 // })
 
 // Front page displays in-progress list for current trip
-app.get('/old-index', (req, res) => {
+app.get('/', (req, res) => {
     db.any('SELECT item_id, name, category, is_on_list, is_packed, quantity FROM items WHERE is_on_list = true AND is_packed = false')
     .then((items) => {
-        res.render('/old-index', { items: items })
+        res.render('index', { items: items })
     })
 })
 
