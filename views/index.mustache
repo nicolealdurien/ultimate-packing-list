@@ -4,36 +4,74 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Packing List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <style>
+        a {
+            color: white;
+        }
+        a:hover {
+            color: #66D3FA;
+        }
         body {
             background-color: #66D3FA;
+            background-image: linear-gradient(navy, #66D3FA);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0 auto;
         }
+        nav {
+            padding: 10px;
+            background-color: white;
+        }
+        .intro {
+            text-align: center;
+            padding: 15px 0px;
+        }
+        .main {
+            padding: 0px 15px;
+        }
+        .navlink {
+            color: navy;
+        }
+        .navlink:hover {
+            color: #66D3FA;
+        }
+
     </style>
 </head>
-<body>
-    <a href='/master-list'>Master List</a><br/>
-    <a href='/add-item'>Add Item To Master List</a><br/>
-    <a href='/already-packed'>Already Packed</a><br/>
-
-    <h1>To Be Packed (My List)</h1>
-    <p style="font-size: 20px;"><em>(To add items to your list, go to <a href='/master-list'>Master List</a>)</em></p>
-    {{#items}}
-    <ul style="list-style:none">
-        <li>Item: {{name}}<br/>
-            Category: <em>{{category}}</em><br/>
-            Qty: {{quantity}}<br/><br/>
-        <div id=buttons style="display: flex">
-        <form method='POST' action='/pack-item'>
-            <input type='hidden' value='{{item_id}}' name='item_id'>
-            <button>Pack Item</button>
-        </form><br/><br/>
-        <form method='POST' action='/de-list-from-my-list'>
-            <input type='hidden' value='{{item_id}}' name='item_id'>
-            <button>Return Item to Master List</button>
-        </form>
+    <nav>
+            <a class="navlink" href='/master-list'>Master List</a><br/>
+            <a class="navlink" href='/add-item'>Add Item To Master List</a><br/>
+            <a class="navlink" href='/already-packed'>Already Packed</a><br/>
+    </nav>
+    <body>
+        <div class="main">
+            <div class="intro">
+                <h1>Ultimate Packing List</h1>
+                <p>Select items from the Master List to populate your list. Add items to the Master List to help it grow if there's something you generally take on trips that isn't already on the list! Mark each item as packed as you go, and it will move from your list to "Already Packed". Once you're satisfied that everything is packed and you're good to go, you can clear your lists and start fresh for the next trip!</p>
+            </div>
+            <h1>To Be Packed (My List)</h1>
+            <p style="font-size: 20px;"><em>(To add items to your list, go to <a href='/master-list'>Master List</a>)</em></p>
+            {{#items}}
+            <ul style="list-style:none">
+                <li>Item: {{name}}<br/>
+                    Category: <em>{{category}}</em><br/>
+                    Qty: {{quantity}}<br/><br/>
+                <div id=buttons style="display: flex">
+                <form method='POST' action='/pack-item'>
+                    <input type='hidden' value='{{item_id}}' name='item_id'>
+                    <button>Pack Item</button>
+                </form><br/><br/>
+                <form method='POST' action='/de-list-from-my-list'>
+                    <input type='hidden' value='{{item_id}}' name='item_id'>
+                    <button>Return Item to Master List</button>
+                </form>
+                </div>
+                </li>
+            </ul>
+            {{/items}}
         </div>
-        </li>
-    </ul>
-    {{/items}}
     </body>
 </html>
