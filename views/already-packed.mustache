@@ -4,33 +4,92 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Packing List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <style>
+        a {
+            color: white;
+        }
+        a:hover {
+            color: #66D3FA;
+        }
+        body {
+            background-color: #66D3FA;
+            background-image: linear-gradient(navy, #66D3FA);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0 auto;
+        }
+        button {
+            background-color: navy;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 0px 2px;
+        }
+        button:hover {
+            background-color: white;
+            color: navy;
+        }
+        nav {
+            padding: 10px;
+            background-color: white;
+            display: flex;
+            justify-content: flex-end;
+        }
+        p {
+            padding: 10px;
+        }
+        .buttons {
+            display: flex;
+        }
+        .intro {
+            text-align: center;
+            padding: 15px 0px;
+        }
+        .main {
+            padding: 0px 15px;
+            font-size: 1.25rem;
+        }
+        .navlink {
+            color: navy;
+            padding: 10px 20px;
+            font-size: 1.25rem
+        }
+        .navlink:hover {
+            color: #66D3FA;
+        }
+
+    </style>
 </head>
+<nav>
+    <a href='/add-item' class="navlink">Add Item To Master List</a><br/>
+    <a href='/already-packed' class="navlink">Already Packed</a><br/>
+    <a href='/' class="navlink">Home/My List</a><br/><br/>
+</nav>
 <body>
-    <a href='/add-item'>Add Item To Master List</a><br/>
-    <a href='/already-packed'>Already Packed</a><br/>
-    <a href='/'>Home/My List</a><br/><br/>
-
-    <h1>Already Packed</h1>
-    {{#items}}
-    <form method='POST' action='/all-to-master-list'>
-    <button>Return ALL Items To Master List</button>
-    </form>
-    <ul style="list-style:none">
-        <li>{{name}} <em>({{category}})</em> Qty: {{quantity}}
-        <div id=buttons style="display: flex">
-        <form method='POST' action='/unpack'>
-            <input type='hidden' value='{{item_id}}' name='item_id'>
-            <button>Unpack (Return to My List)</button>
+    <div class="main">
+        <h1>Already Packed</h1>
+        {{#items}}
+        <form method='POST' action='/all-to-master-list'>
+        <button>Return ALL Items To Master List</button>
         </form>
-        <form method='POST' action='/de-list-from-packed'>
-            <input type='hidden' value='{{item_id}}' name='item_id'>
-            <button>Return Item To Master List</button>
-        </form>
-        </div>
-        </li>
-    </ul>
-    {{/items}}
-
-    
+        <ul style="list-style:none">
+            <li>{{name}} <em>({{category}})</em> Qty: {{quantity}}
+            <div id=buttons style="display: flex">
+            <form method='POST' action='/unpack'>
+                <input type='hidden' value='{{item_id}}' name='item_id'>
+                <button>Unpack (Return to My List)</button>
+            </form>
+            <form method='POST' action='/de-list-from-packed'>
+                <input type='hidden' value='{{item_id}}' name='item_id'>
+                <button>Return Item To Master List</button>
+            </form>
+            </div>
+            </li>
+        </ul>
+        {{/items}}
+    </div>    
 </body>
 </html>

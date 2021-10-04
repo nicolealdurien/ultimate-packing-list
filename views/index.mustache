@@ -21,9 +21,28 @@
             font-family: 'Montserrat', sans-serif;
             margin: 0 auto;
         }
+        button {
+            background-color: navy;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 0px 2px;
+        }
+        button:hover {
+            background-color: white;
+            color: navy;
+        }
         nav {
             padding: 10px;
             background-color: white;
+            display: flex;
+            justify-content: flex-end;
+        }
+        p {
+            padding: 10px;
+        }
+        .buttons {
+            display: flex;
         }
         .intro {
             text-align: center;
@@ -31,9 +50,12 @@
         }
         .main {
             padding: 0px 15px;
+            font-size: 1.25rem;
         }
         .navlink {
             color: navy;
+            padding: 10px 20px;
+            font-size: 1.25rem
         }
         .navlink:hover {
             color: #66D3FA;
@@ -50,7 +72,7 @@
         <div class="main">
             <div class="intro">
                 <h1>Ultimate Packing List</h1>
-                <p>Select items from the Master List to populate your list. Add items to the Master List to help it grow if there's something you generally take on trips that isn't already on the list! Mark each item as packed as you go, and it will move from your list to "Already Packed". Once you're satisfied that everything is packed and you're good to go, you can clear your lists and start fresh for the next trip!</p>
+                <p>Select items from the Master List to populate your list. If there's something you generally take on trips that isn't already listed, add your item to the Master List to make it as thorough as possible. Mark each item from your list as 'packed' once you pack it, and it will move from your list to "Already Packed". Once you're satisfied that everything is packed and you're good to go, you can clear your lists and start fresh for the next trip!</p>
             </div>
             <h1>To Be Packed (My List)</h1>
             <p style="font-size: 20px;"><em>(To add items to your list, go to <a href='/master-list'>Master List</a>)</em></p>
@@ -59,7 +81,7 @@
                 <li>Item: {{name}}<br/>
                     Category: <em>{{category}}</em><br/>
                     Qty: {{quantity}}<br/><br/>
-                <div id=buttons style="display: flex">
+                <div class="buttons">
                 <form method='POST' action='/pack-item'>
                     <input type='hidden' value='{{item_id}}' name='item_id'>
                     <button>Pack Item</button>
