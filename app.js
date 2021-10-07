@@ -136,6 +136,21 @@ app.get('/', (req, res) => {
     })
 })
 
+// Get registration/login page
+app.get('/register', (req, res) => {
+    res.render('register')
+})
+
+// Register new user
+app.post('/register', (req, res) => {
+    const { username, password } = req.body
+
+    db.none('INSERT INTO users(username, password) VALUES($1, $2)', [username, password])
+    .then(() => {
+        res.send("Registration successful!")
+    })
+})
+
 // Display of every item in DB
 app.get('/master-list', (req, res) => {
     db.any('SELECT item_id, name, category, is_on_list, quantity FROM items')
