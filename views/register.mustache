@@ -61,6 +61,10 @@
         .navlink:hover {
             color: #66D3FA;
         }
+        .registration-message {
+            font-style: italic;
+            color: rgb(166, 255, 0)
+        }
 
     </style>
 </head>
@@ -83,7 +87,9 @@
             <input type='password' name='password'>
             <button>Register</button>
             </form>
-            <br/><br/>
+            <br/>
+            <p class="registration-message"> {{success}} </p>
+            <br/>
             <h1>Existing User Login</h1>
             <form method='POST' action='/login'>
                 <label for='username'>Username:</label>

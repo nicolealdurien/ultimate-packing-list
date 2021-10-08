@@ -147,7 +147,8 @@ app.post('/register', (req, res) => {
 
     db.none('INSERT INTO users(username, password) VALUES($1, $2)', [username, password])
     .then(() => {
-        res.send("Registration successful!")
+        const success = "Registration successful!"
+        res.render('register', { success: success })
     })
 })
 
