@@ -5,6 +5,7 @@ const mustacheExpress = require('mustache-express')
 require('dotenv').config()
 const connectionString = process.env.CONNECTION_STRING
 const db = pgp(connectionString)
+const bcrypt = require('bcryptjs')
 
 app.engine('mustache', mustacheExpress())
 app.set('views', './views')
@@ -20,19 +21,6 @@ app.post('/add-item', (req, res) => {
         res.redirect('/master-list')
     })
 })
-
-
-// DON'T THINK THIS IS ACTUALLY STILL IN USE
-// app.post('/update-item', (req,res) => {
-//     let itemId = parseInt(req.body.item_id)
-//     let isPacked = req.body.isPacked == "on" ? true : false
-    
-//     db.none('UPDATE items SET is_packed = $1 WHERE item_id = $2', [isPacked, itemId])
-//     .then(() => {
-//         res.redirect('/')
-//     })
-// })
-
 
 // Copy all items from Master List to individual list for a particular trip
 app.post('/all-to-my-list', (req, res) => {
@@ -53,7 +41,6 @@ app.post('/all-to-master-list', (req, res) => {
         res.redirect('/')
     })
 })
-
 
 // Move individual item from current list to "Already Packed"
 app.post('/pack-item', (req,res) => {
@@ -112,23 +99,7 @@ app.post('/de-list-from-my-list', (req,res) => {
     })
 })
 
-// Not actually using this right now
-// app.post('/delete-item', (req, res) => {
-//     const { itemId } = req.body
-//     db.none('DELETE FROM items WHERE item_id = $1;', [bookId])
-//     .then(() => {
-//         res.redirect('/')
-//     })
-// })
-
 // Front page displays in-progress list for current trip
-app.get('/', (req, res) => {
-    db.any('SELECT item_id, name, category, is_on_list, is_packed, quantity FROM items WHERE is_on_list = true AND is_packed = false')
-    .then((items) => {
-        res.render('index', { items: items })
-    })
-})
-
 app.get('/', (req, res) => {
     db.any('SELECT item_id, name, category, is_on_list, is_packed, quantity FROM items WHERE is_on_list = true AND is_packed = false')
     .then((items) => {
@@ -143,12 +114,18 @@ app.get('/register', (req, res) => {
 
 // Register new user
 app.post('/register', (req, res) => {
-    const { username, password } = req.body
+    const username = req.body.username
+    const password = req.body.password
 
-    db.none('INSERT INTO users(username, password) VALUES($1, $2)', [username, password])
-    .then(() => {
-        const success = "Registration successful!"
-        res.render('register', { success: success })
+    bcrypt.genSalt(10, function (error, salt) {
+        bcrypt.hash(password, salt, function (error, hash) {
+            if(!error) {
+                db.none('INSERT INTO users(username, password) VALUES($1, $2', [username, password])
+                .then(() => {
+                    res.send("User registered!")
+                })
+            }
+        })
     })
 })
 
