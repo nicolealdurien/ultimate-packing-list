@@ -112,7 +112,7 @@ app.get('/register', (req, res) => {
     res.render('register')
 })
 
-// Register new user
+// Register new user with hashed password
 app.post('/register', (req, res) => {
     const username = req.body.username
     const password = req.body.password
@@ -120,9 +120,10 @@ app.post('/register', (req, res) => {
     bcrypt.genSalt(10, function (error, salt) {
         bcrypt.hash(password, salt, function (error, hash) {
             if(!error) {
-                db.none('INSERT INTO users(username, password) VALUES($1, $2', [username, password])
+                db.none('INSERT INTO users(username, password) VALUES($1, $2)', [username, hash])
                 .then(() => {
-                    res.send("User registered!")
+                    const success = "User registered successfully!"
+                    res.render('register', { success: success })
                 })
             }
         })
