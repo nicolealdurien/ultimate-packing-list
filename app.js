@@ -112,7 +112,7 @@ app.get('/auth', (req, res) => {
     res.render('auth')
 })
 
-// Register new user with hashed password
+// Register new user and store their password as a hash
 app.post('/register', (req, res) => {
     const username = req.body.username
     const password = req.body.password
