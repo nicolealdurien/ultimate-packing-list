@@ -108,8 +108,8 @@ app.get('/', (req, res) => {
 })
 
 // Get registration/login page
-app.get('/register', (req, res) => {
-    res.render('register')
+app.get('/auth', (req, res) => {
+    res.render('auth')
 })
 
 // Register new user with hashed password
