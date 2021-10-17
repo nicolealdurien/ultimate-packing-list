@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+let session = require('express-session')
 const pgp = require('pg-promise')()
 const mustacheExpress = require('mustache-express')
 require('dotenv').config()
@@ -11,6 +12,11 @@ app.engine('mustache', mustacheExpress())
 app.set('views', './views')
 app.set('view engine', 'mustache')
 app.use(express.urlencoded())
+app.use(session({ // initialize session
+    secret: 'tacocat',
+    resave: false,
+    saveUninitialized: true,
+}))
 
 // add item to Master List
 app.post('/add-item', (req, res) => {
@@ -114,8 +120,7 @@ app.get('/auth', (req, res) => {
 
 // Register new user and store their password as a hash
 app.post('/register', (req, res) => {
-    const username = req.body.username
-    const password = req.body.password
+    const { username, password } = req.body
 
     bcrypt.genSalt(10, function (error, salt) {
         bcrypt.hash(password, salt, function (error, hash) {
@@ -123,10 +128,31 @@ app.post('/register', (req, res) => {
                 db.none('INSERT INTO users(username, password) VALUES($1, $2)', [username, hash])
                 .then(() => {
                     const success = "User registered successfully!"
-                    res.render('register', { success: success })
+                    res.render('auth', { success: success })
                 })
             }
         })
+    })
+})
+
+// Existing user login
+app.post('/login', (req, res) => {
+    const { username, password } = req.body
+
+    db.one('SELECT user_id, username, password FROM users WHERE username =$1', [username])
+    .then((user) => {
+        bcrypt.compare(password, user.password, function(error, result){
+            if (result) {
+                if (req.session) {
+                    const loginSuccess = `Welcome, ${user.username}! You are now logged in.`
+                    req.session.user = { username: user.username, userId: user.user_id }
+                    res.render('auth', { success: loginSuccess })
+                }
+            } else res.send('Invalid login credentials.')
+        })
+    }).catch((error) => {
+        console.log(error)
+        res.send('Invalid username or password.')
     })
 })
 

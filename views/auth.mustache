@@ -47,7 +47,7 @@
         }
         .intro {
             text-align: center;
-            padding: 20px 0px;
+            padding: 15px 0px;
         }
         .main {
             padding: 0px 15px;
@@ -61,7 +61,7 @@
         .navlink:hover {
             color: #66D3FA;
         }
-         .message {
+        .message {
             font-style: italic;
             color: rgb(255, 255, 0)
         }
@@ -78,30 +78,27 @@
     <body>
         <div class="main">
             <div class="intro">
-                <h1 class="message"> {{success}} </h1><br/>
-                <h1>Ultimate Packing List</h1>
-                <p>Select items from the Master List to populate your list. If there's something you generally take on trips that isn't already listed, add your item to the Master List to make it as thorough as possible. Mark each item from your list as 'packed' once you pack it, and it will move from your list to "Already Packed". Once you're satisfied that everything is packed and you're good to go, you can clear your lists and start fresh for the next trip!</p>
+                <h1>Sign Up / Login</h1>
             </div>
-            <h1>To Be Packed (My List)</h1>
-            <p style="font-size: 20px;"><em>(To add items to your list, go to <a href='/master-list'>Master List</a>)</em></p>
-            {{#items}}
-            <ul style="list-style:none">
-                <li>Item: {{name}}<br/>
-                    Category: <em>{{category}}</em><br/>
-                    Qty: {{quantity}}<br/><br/>
-                <div class="buttons">
-                <form method='POST' action='/pack-item'>
-                    <input type='hidden' value='{{item_id}}' name='item_id'>
-                    <button>Pack Item</button>
-                </form><br/><br/>
-                <form method='POST' action='/de-list-from-my-list'>
-                    <input type='hidden' value='{{item_id}}' name='item_id'>
-                    <button>Return Item to Master List</button>
+            <h1>New User Sign Up</h1>
+            <form method='POST' action='/register'>
+            <label for='username'>Username:</label>
+            <input type='text' name='username'>
+            <label for='password'>Password:</label>
+            <input type='password' name='password'>
+            <button>Register</button>
+            </form>
+            <br/>
+            <h1 class="message"> {{success}} </h1>
+            <br/>
+            <h1>Existing User Login</h1>
+            <form method='POST' action='/login'>
+                <label for='username'>Username:</label>
+                <input type='text' name='username'>
+                <label for='password'>Password:</label>
+                <input type='password' name='password'>
+                <button>Login</button>
                 </form>
-                </div>
-                </li>
-            </ul>
-            {{/items}}
-        </div>
+            </div>
     </body>
 </html>
