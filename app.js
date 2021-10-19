@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-let session = require('express-session')
+var session = require('express-session')
 const pgp = require('pg-promise')()
 const mustacheExpress = require('mustache-express')
 require('dotenv').config()
@@ -20,11 +20,13 @@ app.use(session({ // initialize session
 
 // add item to Master List
 app.post('/add-item', (req, res) => {
-    const { name, category } = req.body
-    const quantity = parseInt(req.body.quantity)
-    db.none('INSERT INTO items(name, category) VALUES($1, $2)', [name, category])
+    const userId = req.session.user_id
+    const name = req.body.name
+    console.log('userId', userId)
+    const category = req.body.category
+    db.none('INSERT INTO items(name, category, user_id) VALUES($1, $2, $3)', [name, category, userId])
     .then(() => {
-        res.redirect('/master-list')
+        res.redirect('/my-master-list')
     })
 })
 
@@ -127,8 +129,8 @@ app.post('/register', (req, res) => {
             if(!error) {
                 db.none('INSERT INTO users(username, password) VALUES($1, $2)', [username, hash])
                 .then(() => {
-                    const success = "User registered successfully!"
-                    res.render('auth', { success: success })
+                    const regSuccess = "User registered successfully!"
+                    res.render('auth', { success: regSuccess })
                 })
             }
         })
@@ -157,10 +159,11 @@ app.post('/login', (req, res) => {
 })
 
 // Display of every item in DB
-app.get('/master-list', (req, res) => {
-    db.any('SELECT item_id, name, category, is_on_list, quantity FROM items')
+app.get('/my-master-list', (req, res) => {
+    const { userId } = req.session
+    db.any('SELECT item_id, name, category, is_on_list, quantity FROM items WHERE user_id = $1')
     .then((items) => {
-        res.render('master-list', { items: items })
+        res.render('my-master-list', { items: items })
     })
 })
 
